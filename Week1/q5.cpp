@@ -6,6 +6,7 @@ using namespace std;
 class Solution {
 public:
     bool isBalanced(string s) {
+        
         stack<char> st;
         for (char c : s) {
             if (c == '(' || c == '{' || c == '[') {
