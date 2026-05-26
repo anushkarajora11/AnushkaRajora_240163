@@ -4,11 +4,27 @@ public:
         
         vector<vector<int>> ans;
 
-        sort(nums.begin(), nums.end());
+        function<void(int)> generate = [&](int index) {
 
-        do {
-            ans.push_back(nums);
-        } while(next_permutation(nums.begin(), nums.end()));
+            // If all positions are fixed
+            if(index == nums.size()) {
+                ans.push_back(nums);
+                return;
+            }
+
+            // Try every element at current position
+            for(int i = index; i < nums.size(); i++) {
+
+                swap(nums[index], nums[i]);
+
+                generate(index + 1);
+
+                // Backtrack
+                swap(nums[index], nums[i]);
+            }
+        };
+
+        generate(0);
 
         return ans;
     }
