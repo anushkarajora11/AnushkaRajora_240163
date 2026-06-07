@@ -1,11 +1,19 @@
 class Solution {
 public:
     char findTheDifference(string s, string t) {
-        char ans = 0;
+        unordered_map<char, int> mp;
 
-        for(char c : s) ans ^= c;
-        for(char c : t) ans ^= c;
+        for(char c : s) {
+            mp[c]++;
+        }
 
-        return ans;
+        for(char c : t) {
+            mp[c]--;
+            if(mp[c] < 0) {
+                return c;
+            }
+        }
+
+        return '\0';
     }
 };
