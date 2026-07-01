@@ -1,6 +1,8 @@
 class Solution {
 public:
     string shortestPalindrome(string s) {
+        if (s.empty()) return s;
+
         string rev = s;
         reverse(rev.begin(), rev.end());
 
@@ -11,11 +13,13 @@ public:
         for (int i = 1; i < temp.size(); i++) {
             int j = lps[i - 1];
 
-            while (j > 0 && temp[i] != temp[j])
+            while (j > 0 && temp[i] != temp[j]) {
                 j = lps[j - 1];
+            }
 
-            if (temp[i] == temp[j])
+            if (temp[i] == temp[j]) {
                 j++;
+            }
 
             lps[i] = j;
         }
