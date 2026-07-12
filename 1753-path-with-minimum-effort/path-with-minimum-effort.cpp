@@ -1,55 +1,54 @@
 class Solution {
 public:
-    int minimumEffortPath(vector<vector<int>>& heights) {
+    bool bfs(vector<vector<int>>& heights, int limit) {
         int m = heights.size();
         int n = heights[0].size();
 
-        vector<vector<int>> dist(m, vector<int>(n, INT_MAX));
+        queue<pair<int,int>> q;
+        vector<vector<int>> vis(m, vector<int>(n, 0));
 
-        priority_queue<
-            pair<int, pair<int,int>>,
-            vector<pair<int, pair<int,int>>>,
-            greater<pair<int, pair<int,int>>>
-        > pq;
+        q.push({0,0});
+        vis[0][0] = 1;
 
-        dist[0][0] = 0;
-        pq.push({0, {0, 0}});
+        int dr[] = {-1,1,0,0};
+        int dc[] = {0,0,-1,1};
 
-        int dr[] = {-1, 1, 0, 0};
-        int dc[] = {0, 0, -1, 1};
+        while (!q.empty()) {
+            auto [r,c] = q.front();
+            q.pop();
 
-        while (!pq.empty()) {
-            auto it = pq.top();
-            pq.pop();
-
-            int effort = it.first;
-            int r = it.second.first;
-            int c = it.second.second;
-
-            if (r == m - 1 && c == n - 1)
-                return effort;
-
-            if (effort > dist[r][c])
-                continue;
+            if (r == m-1 && c == n-1)
+                return true;
 
             for (int k = 0; k < 4; k++) {
                 int nr = r + dr[k];
                 int nc = c + dc[k];
 
-                if (nr >= 0 && nr < m && nc >= 0 && nc < n) {
-                    int newEffort = max(
-                        effort,
-                        abs(heights[r][c] - heights[nr][nc])
-                    );
+                if (nr >= 0 && nr < m && nc >= 0 && nc < n &&
+                    !vis[nr][nc] &&
+                    abs(heights[r][c] - heights[nr][nc]) <= limit) {
 
-                    if (newEffort < dist[nr][nc]) {
-                        dist[nr][nc] = newEffort;
-                        pq.push({newEffort, {nr, nc}});
-                    }
+                    vis[nr][nc] = 1;
+                    q.push({nr,nc});
                 }
             }
         }
 
-        return 0;
+        return false;
+    }
+
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        int low = 0, high = 1000000;
+
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+
+            if (bfs(heights, mid))
+                high = mid;
+            else
+                low = mid + 1;
+        }
+
+        return low;
     }
 };
