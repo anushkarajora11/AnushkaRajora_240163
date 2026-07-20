@@ -5,37 +5,21 @@ public:
         int m = obstacleGrid.size();
         int n = obstacleGrid[0].size();
 
-        if (obstacleGrid[m - 1][n - 1] == 1)
-            return 0;
+        vector<long long> dp(n, 0);
+        dp[0] = 1;
 
-        vector<vector<long long>> dp(m, vector<long long>(n, 0));
-
-        for (int i = m - 1; i >= 0; i--) {
-            for (int j = n - 1; j >= 0; j--) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
 
                 if (obstacleGrid[i][j] == 1) {
-                    dp[i][j] = 0;
-                    continue;
+                    dp[j] = 0;
                 }
-
-                if (i == m - 1 && j == n - 1) {
-                    dp[i][j] = 1;
-                    continue;
+                else if (j > 0) {
+                    dp[j] = dp[j] + dp[j - 1];
                 }
-
-                long long right = 0;
-                long long down = 0;
-
-                if (j + 1 < n)
-                    right = dp[i][j + 1];
-
-                if (i + 1 < m)
-                    down = dp[i + 1][j];
-
-                dp[i][j] = right + down;
             }
         }
 
-        return (int)dp[0][0];
+        return (int)dp[n - 1];
     }
 };
